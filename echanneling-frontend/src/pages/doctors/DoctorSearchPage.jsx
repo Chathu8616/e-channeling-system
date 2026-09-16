@@ -46,7 +46,7 @@ export default function DoctorSearchPage() {
       <p className="text-muted mb-4">Search by specialty, hospital branch, or doctor name.</p>
 
       <form className="card p-3 g-2 row mb-4" onSubmit={handleSubmit}>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <input
             name="specialty"
             className="form-control"
@@ -55,7 +55,7 @@ export default function DoctorSearchPage() {
             onChange={handleChange}
           />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <input
             name="branch"
             className="form-control"
@@ -73,8 +73,8 @@ export default function DoctorSearchPage() {
             onChange={handleChange}
           />
         </div>
-        <div className="col-md-1">
-          <button type="submit" className="btn btn-primary w-100 rounded-pill">
+        <div className="col-md-3">
+          <button type="submit" className="btn btn-primary w-100 rounded-pill text-nowrap">
             Search
           </button>
         </div>
