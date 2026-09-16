@@ -9,6 +9,7 @@ import DoctorSearchPage from './pages/doctors/DoctorSearchPage';
 import DoctorProfilePage from './pages/doctors/DoctorProfilePage';
 import BookAppointmentPage from './pages/booking/BookAppointmentPage';
 import MyAppointmentsPage from './pages/booking/MyAppointmentsPage';
+import PaymentPage from './pages/payments/PaymentPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/doctors/:id" element={<DoctorProfilePage />} />
           <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
           <Route path="/appointments" element={<MyAppointmentsPage />} />
+          <Route path="/pay/:appointmentId" element={<PaymentPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>

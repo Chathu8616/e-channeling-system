@@ -29,8 +29,8 @@ export default function BookAppointmentPage() {
         <p>
           {result.appointmentDate} at {result.timeSlot} with Dr. {result.doctorName}
         </p>
-        <Link to="/appointments" className="btn btn-primary rounded-pill px-4">
-          Go to My Appointments
+        <Link to={`/pay/${result.appointmentId}`} className="btn btn-primary rounded-pill px-4">
+          Pay now
         </Link>
       </div>
     );
