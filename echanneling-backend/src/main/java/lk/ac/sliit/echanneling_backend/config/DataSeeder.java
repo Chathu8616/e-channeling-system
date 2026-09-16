@@ -36,7 +36,14 @@ public class DataSeeder implements CommandLineRunner {
         createUserIfMissing("Operations Manager", "198512345671", "admin@example.com", "Admin@123", Role.OPERATIONS_MANAGER);
 
         User doctorUser = createUserIfMissing(
-                "Dr. Anjali Perera", "197812345672", "doctor@example.com", "Doctor@123", Role.DOCTOR);
+                "Anjali Perera", "197812345672", "doctor@example.com", "Doctor@123", Role.DOCTOR);
+
+        // Self-heal an earlier seeding bug where the name already included "Dr." — the frontend
+        // always prefixes "Dr." itself, so the stored name must be the plain name only.
+        if ("Dr. Anjali Perera".equals(doctorUser.getFullName())) {
+            doctorUser.setFullName("Anjali Perera");
+            userRepository.save(doctorUser);
+        }
 
         Doctor doctor = doctorRepository.findByUser_UserId(doctorUser.getUserId())
                 .orElseGet(() -> {
