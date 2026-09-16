@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import RequireRole from './components/RequireRole';
 import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -29,8 +30,22 @@ function App() {
             <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
             <Route path="/appointments" element={<MyAppointmentsPage />} />
             <Route path="/pay/:appointmentId" element={<PaymentPage />} />
-            <Route path="/admin/schedule" element={<ScheduleManagerPage />} />
-            <Route path="/admin/reports" element={<ReportsPage />} />
+            <Route
+              path="/admin/schedule"
+              element={
+                <RequireRole roles={['OPERATIONS_MANAGER', 'DOCTOR']}>
+                  <ScheduleManagerPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                <RequireRole roles={['OPERATIONS_MANAGER', 'DOCTOR']}>
+                  <ReportsPage />
+                </RequireRole>
+              }
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
