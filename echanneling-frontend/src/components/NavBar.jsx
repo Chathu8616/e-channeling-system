@@ -8,9 +8,20 @@ const DOCTORS_LINK_LABEL = {
   PATIENT: 'Our Doctors',
 };
 
+const ROLE_LABEL = {
+  OPERATIONS_MANAGER: 'Operations Manager',
+  DOCTOR: 'Doctor',
+  PATIENT: 'Patient',
+};
+
+function initials(email) {
+  return email.slice(0, 2).toUpperCase();
+}
+
 export default function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const isStaff = user?.role === 'OPERATIONS_MANAGER' || user?.role === 'DOCTOR';
 
   const handleLogout = () => {
     logout();
@@ -38,7 +49,8 @@ export default function NavBar() {
         </button>
 
         <div id="navbarContent" className="collapse navbar-collapse">
-          <ul className="navbar-nav ms-auto align-items-lg-center">
+          {/* Patient-facing links — visible to everyone */}
+          <ul className="navbar-nav me-auto align-items-lg-center">
             <li className="nav-item px-2">
               <NavLink className="nav-link" to="/doctors">
                 Find a Doctor
@@ -51,13 +63,6 @@ export default function NavBar() {
                 </NavLink>
               </li>
             )}
-            {user?.role === 'DOCTOR' && (
-              <li className="nav-item px-2">
-                <NavLink className="nav-link" to="/my-profile">
-                  My Profile
-                </NavLink>
-              </li>
-            )}
             {user && (
               <li className="nav-item px-2">
                 <NavLink className="nav-link" to="/doctor-directory">
@@ -65,34 +70,81 @@ export default function NavBar() {
                 </NavLink>
               </li>
             )}
-            {user?.role === 'OPERATIONS_MANAGER' || user?.role === 'DOCTOR' ? (
-              <>
-                <li className="nav-item px-2">
-                  <NavLink className="nav-link" to="/admin/schedule">
-                    Schedule
-                  </NavLink>
-                </li>
-                <li className="nav-item px-2">
-                  <NavLink className="nav-link" to="/admin/reports">
-                    Reports
-                  </NavLink>
-                </li>
-              </>
-            ) : null}
+          </ul>
+
+          {/* Staff tools + account — grouped on the right */}
+          <ul className="navbar-nav align-items-lg-center">
+            {isStaff && (
+              <li className="nav-item dropdown px-2">
+                <a
+                  href="#!"
+                  role="button"
+                  className="nav-link dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Admin
+                </a>
+                <ul className="dropdown-menu shadow-md border-0">
+                  <li>
+                    <NavLink className="dropdown-item" to="/admin/schedule">
+                      Schedule
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item" to="/admin/reports">
+                      Reports
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
+            )}
+
             <NotificationBell />
 
             {user ? (
-              <li className="nav-item px-2 d-flex align-items-center gap-2">
-                <span className="small text-muted d-none d-md-inline">
-                  {user.email.split('@')[0]}
-                </span>
+              <li className="nav-item dropdown px-2">
                 <button
                   type="button"
-                  className="btn btn-sm btn-outline-primary rounded-pill"
-                  onClick={handleLogout}
+                  className="btn btn-sm btn-light dropdown-toggle d-flex align-items-center gap-2 rounded-pill"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
-                  Logout
+                  <span
+                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                    style={{
+                      width: 26,
+                      height: 26,
+                      background: 'linear-gradient(135deg, var(--brand), var(--accent))',
+                      color: '#fff',
+                      fontWeight: 700,
+                      fontSize: '0.65rem',
+                    }}
+                  >
+                    {initials(user.email)}
+                  </span>
+                  <span className="d-none d-md-inline small">{user.email.split('@')[0]}</span>
                 </button>
+                <ul className="dropdown-menu dropdown-menu-end shadow-md border-0">
+                  <li className="dropdown-item-text small text-muted">
+                    {ROLE_LABEL[user.role] || user.role}
+                  </li>
+                  {user.role === 'DOCTOR' && (
+                    <li>
+                      <NavLink className="dropdown-item" to="/my-profile">
+                        My Profile
+                      </NavLink>
+                    </li>
+                  )}
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <button type="button" className="dropdown-item" onClick={handleLogout}>
+                      Logout
+                    </button>
+                  </li>
+                </ul>
               </li>
             ) : (
               <li className="nav-item px-2">
