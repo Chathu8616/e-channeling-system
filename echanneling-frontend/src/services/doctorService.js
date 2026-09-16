@@ -6,6 +6,10 @@ export const getDoctor = (id) => api.get(`/doctors/${id}`);
 
 export const createDoctor = (doctor) => api.post('/doctors', doctor);
 
+export const getMyDoctorProfile = () => api.get('/doctors/me');
+
+export const updateMyDoctorProfile = (profile) => api.put('/doctors/me', profile);
+
 export const getDoctorSessions = (id, date) =>
   api.get(`/doctors/${id}/sessions`, { params: { date } });
 
