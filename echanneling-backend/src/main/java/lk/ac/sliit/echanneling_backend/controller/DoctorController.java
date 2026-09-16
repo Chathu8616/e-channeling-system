@@ -47,6 +47,14 @@ public class DoctorController {
         return doctorService.getOpenSessions(id, date);
     }
 
+    @GetMapping("/{id}/sessions/all")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'OPERATIONS_MANAGER')")
+    public List<SessionResponse> getAllSessions(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return doctorService.getAllSessions(id, date);
+    }
+
     @PostMapping("/{id}/sessions")
     @PreAuthorize("hasAnyRole('DOCTOR', 'OPERATIONS_MANAGER')")
     public SessionResponse createSession(@PathVariable Long id, @Valid @RequestBody CreateSessionRequest req) {
