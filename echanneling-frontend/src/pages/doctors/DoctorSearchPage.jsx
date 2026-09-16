@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import DoctorCard from '../../components/DoctorCard';
+import Spinner from '../../components/Spinner';
 import { searchDoctors } from '../../services/doctorService';
 
 export default function DoctorSearchPage() {
@@ -41,9 +42,10 @@ export default function DoctorSearchPage() {
 
   return (
     <div className="page-container">
-      <h1 className="mb-4">Find a Doctor</h1>
+      <h1 className="mb-1">Find a Doctor</h1>
+      <p className="text-muted mb-4">Search by specialty, hospital branch, or doctor name.</p>
 
-      <form className="row g-2 mb-4" onSubmit={handleSubmit}>
+      <form className="card p-3 g-2 row mb-4" onSubmit={handleSubmit}>
         <div className="col-md-4">
           <input
             name="specialty"
@@ -78,9 +80,11 @@ export default function DoctorSearchPage() {
         </div>
       </form>
 
-      {loading && <p>Loading...</p>}
+      {loading && <Spinner label="Searching doctors..." />}
       {error && <p className="text-danger">{error}</p>}
-      {!loading && !error && doctors.length === 0 && <p>No doctors found.</p>}
+      {!loading && !error && doctors.length === 0 && (
+        <p className="text-muted">No doctors found. Try a different search.</p>
+      )}
 
       <div className="row">
         {doctors.map((doctor) => (
