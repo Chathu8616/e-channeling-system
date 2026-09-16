@@ -37,60 +37,69 @@ export default function ReportsPage() {
 
   return (
     <div className="page-container">
-      <h1 className="mb-4">Reports</h1>
+      <h1 className="mb-1">Reports</h1>
+      <p className="text-muted mb-4">Appointment and revenue reporting for admins and doctors.</p>
 
-      <div className="row g-2 align-items-end mb-4">
-        <div className="col-md-3">
-          <label className="form-label">From</label>
-          <input type="date" className="form-control" value={from} onChange={(e) => setFrom(e.target.value)} />
+      <div className="card p-4 mb-4">
+        <div className="row g-2 align-items-end">
+          <div className="col-md-3">
+            <label className="form-label">From</label>
+            <input type="date" className="form-control" value={from} onChange={(e) => setFrom(e.target.value)} />
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">To</label>
+            <input type="date" className="form-control" value={to} onChange={(e) => setTo(e.target.value)} />
+          </div>
+          <div className="col-md-3">
+            <button type="button" className="btn btn-primary w-100 rounded-pill" onClick={loadReports}>
+              Run report
+            </button>
+          </div>
         </div>
-        <div className="col-md-3">
-          <label className="form-label">To</label>
-          <input type="date" className="form-control" value={to} onChange={(e) => setTo(e.target.value)} />
-        </div>
-        <div className="col-md-3">
-          <button type="button" className="btn btn-primary w-100" onClick={loadReports}>
-            Run report
-          </button>
-        </div>
+        {error && <p className="text-danger mb-0 mt-3">{error}</p>}
       </div>
 
-      {error && <p className="text-danger">{error}</p>}
-
       {summary && (
-        <div className="row mb-4 text-center">
+        <div className="row mb-4 text-center g-3">
           <div className="col-md-4">
-            <div className="card p-3">
-              <div className="fs-4">{summary.totalAppointments}</div>
-              <div className="text-muted">Appointments on {summary.date}</div>
+            <div className="card card-hover p-4">
+              <div className="fs-3 fw-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--brand)' }}>
+                {summary.totalAppointments}
+              </div>
+              <div className="text-muted small">Appointments on {summary.date}</div>
             </div>
           </div>
           <div className="col-md-4">
-            <div className="card p-3">
-              <div className="fs-4">{summary.cancelledAppointments}</div>
-              <div className="text-muted">Cancelled</div>
+            <div className="card card-hover p-4">
+              <div className="fs-3 fw-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--brand)' }}>
+                {summary.cancelledAppointments}
+              </div>
+              <div className="text-muted small">Cancelled</div>
             </div>
           </div>
           <div className="col-md-4">
-            <div className="card p-3">
-              <div className="fs-4">Rs. {summary.totalRevenue}</div>
-              <div className="text-muted">Revenue</div>
+            <div className="card card-hover p-4">
+              <div className="fs-3 fw-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--accent-dark)' }}>
+                Rs. {summary.totalRevenue}
+              </div>
+              <div className="text-muted small">Revenue</div>
             </div>
           </div>
         </div>
       )}
 
-      <div className="d-flex justify-content-between align-items-center mb-2">
+      <div className="card p-4 mb-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="h5 mb-0">Appointments ({appointments.length})</h2>
         <button
           type="button"
-          className="btn btn-sm btn-outline-primary"
+          className="btn btn-sm btn-outline-primary rounded-pill"
           onClick={() => exportAppointmentsExcel(from, to)}
         >
           Export to Excel
         </button>
       </div>
-      <div className="table-responsive mb-4">
+      <div className="table-responsive">
         <table className="table table-sm">
           <thead>
             <tr>
@@ -114,12 +123,14 @@ export default function ReportsPage() {
           </tbody>
         </table>
       </div>
+      </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-2">
+      <div className="card p-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="h5 mb-0">Payments ({payments.length})</h2>
         <button
           type="button"
-          className="btn btn-sm btn-outline-primary"
+          className="btn btn-sm btn-outline-primary rounded-pill"
           onClick={() => exportPaymentsExcel(from, to)}
         >
           Export to Excel
@@ -146,6 +157,7 @@ export default function ReportsPage() {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );
