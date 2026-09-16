@@ -87,11 +87,11 @@ export default function PaymentPage() {
         {error && <p className="text-danger">{error}</p>}
 
         {payment?.status === 'FAILED' ? (
-          <button type="button" className="btn btn-primary w-100" onClick={handleRetry} disabled={submitting}>
+          <button type="button" className="btn btn-primary w-100 rounded-pill" onClick={handleRetry} disabled={submitting}>
             {submitting ? 'Retrying...' : 'Retry payment'}
           </button>
         ) : (
-          <button type="button" className="btn btn-primary w-100" onClick={handlePay} disabled={submitting}>
+          <button type="button" className="btn btn-primary w-100 rounded-pill" onClick={handlePay} disabled={submitting}>
             {submitting ? 'Processing...' : 'Pay now'}
           </button>
         )}

@@ -74,7 +74,7 @@ export default function DoctorSearchPage() {
           />
         </div>
         <div className="col-md-1">
-          <button type="submit" className="btn btn-primary w-100">
+          <button type="submit" className="btn btn-primary w-100 rounded-pill">
             Search
           </button>
         </div>

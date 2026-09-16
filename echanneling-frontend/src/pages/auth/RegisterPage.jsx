@@ -91,7 +91,7 @@ export default function RegisterPage() {
 
         {error && <p className="text-danger">{error}</p>}
 
-        <button type="submit" className="btn btn-primary w-100" disabled={submitting}>
+        <button type="submit" className="btn btn-primary w-100 rounded-pill" disabled={submitting}>
           {submitting ? 'Creating account...' : 'Register'}
         </button>
 
