@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { blockSession, createSession, getDoctorSessions } from '../../services/doctorService';
+import { blockSession, createSession, getDoctorSessions, updateSession } from '../../services/doctorService';
+
+const emptyForm = { sessionDate: '', startTime: '', endTime: '' };
 
 export default function ScheduleManagerPage() {
   const [doctorId, setDoctorId] = useState('');
-  const [form, setForm] = useState({ sessionDate: '', startTime: '', endTime: '' });
+  const [form, setForm] = useState(emptyForm);
+  const [editingSessionId, setEditingSessionId] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [blockId, setBlockId] = useState('');
   const [message, setMessage] = useState('');
@@ -19,16 +22,38 @@ export default function ScheduleManagerPage() {
     }
   };
 
-  const handleAddSession = async (e) => {
+  const handleEditClick = (session) => {
+    setEditingSessionId(session.sessionId);
+    setForm({
+      sessionDate: session.sessionDate,
+      startTime: session.startTime,
+      endTime: session.endTime,
+    });
+    setMessage('');
+    setError('');
+  };
+
+  const cancelEdit = () => {
+    setEditingSessionId(null);
+    setForm(emptyForm);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setMessage('');
     try {
-      await createSession(doctorId, form);
-      setMessage('Session added.');
+      if (editingSessionId) {
+        await updateSession(editingSessionId, form);
+        setMessage('Session updated.');
+        setEditingSessionId(null);
+      } else {
+        await createSession(doctorId, form);
+        setMessage('Session added.');
+      }
       loadSessions();
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not add session.');
+      setError(err.response?.data?.message || 'Could not save session.');
     }
   };
 
@@ -38,6 +63,7 @@ export default function ScheduleManagerPage() {
     try {
       await blockSession(id);
       setMessage(`Session ${id} blocked.`);
+      if (editingSessionId === id) cancelEdit();
       loadSessions();
     } catch (err) {
       setError(err.response?.data?.message || 'Could not block session.');
@@ -47,7 +73,7 @@ export default function ScheduleManagerPage() {
   return (
     <div className="page-container">
       <h1 className="mb-1">Manage Doctor Schedule</h1>
-      <p className="text-muted mb-4">Add or block a doctor's available time slots.</p>
+      <p className="text-muted mb-4">Add, update, or block a doctor's available time slots.</p>
 
       <div className="card p-4 mb-4">
         <div className="mb-3" style={{ maxWidth: 240 }}>
@@ -57,10 +83,17 @@ export default function ScheduleManagerPage() {
             className="form-control"
             value={doctorId}
             onChange={(e) => setDoctorId(e.target.value)}
+            disabled={!!editingSessionId}
           />
         </div>
 
-        <form className="row g-2 align-items-end" onSubmit={handleAddSession}>
+        {editingSessionId && (
+          <div className="badge-soft-brand badge mb-3" style={{ width: 'fit-content' }}>
+            Editing session #{editingSessionId}
+          </div>
+        )}
+
+        <form className="row g-2 align-items-end" onSubmit={handleSubmit}>
           <div className="col-md-3">
             <label className="form-label">Date</label>
             <input
@@ -91,11 +124,18 @@ export default function ScheduleManagerPage() {
               required
             />
           </div>
-          <div className="col-md-3">
+          <div className="col-md-3 d-flex gap-2">
             <button type="submit" className="btn btn-primary w-100 rounded-pill">
-              Add session
+              {editingSessionId ? 'Update session' : 'Add session'}
             </button>
           </div>
+          {editingSessionId && (
+            <div className="col-12">
+              <button type="button" className="btn btn-link btn-sm ps-0" onClick={cancelEdit}>
+                Cancel edit
+              </button>
+            </div>
+          )}
         </form>
 
         <button
@@ -115,13 +155,22 @@ export default function ScheduleManagerPage() {
         {sessions.map((s) => (
           <li key={s.sessionId} className="list-group-item d-flex justify-content-between align-items-center">
             {s.sessionDate} {s.startTime} - {s.endTime}
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-danger rounded-pill"
-              onClick={() => handleBlockSession(s.sessionId)}
-            >
-              Block
-            </button>
+            <div className="d-flex gap-2">
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-primary rounded-pill"
+                onClick={() => handleEditClick(s)}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-danger rounded-pill"
+                onClick={() => handleBlockSession(s.sessionId)}
+              >
+                Block
+              </button>
+            </div>
           </li>
         ))}
       </ul>
