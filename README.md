@@ -85,7 +85,7 @@ Each of the 6 functional areas below was built on its own branch and merged into
 | `booking` | Appointment booking, cancellation & rescheduling |
 | `payments` | Online payment management (simulated gateway) |
 | `notifications` | Notification system (in-app + optional email) |
-| `admin-reports` | Doctor schedule management & administrative reporting (Excel export) |
+| `admin-reports` | Doctor schedule management & administrative reporting (Excel/PDF export) |
 
 ## Notes on what's simplified for this student project
 
@@ -95,5 +95,4 @@ Each of the 6 functional areas below was built on its own branch and merged into
   `application.properties`). Every notification is always recorded in the `notifications` table;
   turn the flag on and fill in `spring.mail.*` (e.g. a Gmail app password) to actually send email.
   SMS is not integrated — notifications are logged/stored instead, as the brief suggests.
-- **Reports** export to Excel (`.xlsx`) via Apache POI; PDF export was left out to keep scope
-  reasonable.
+- **Reports** export to both Excel (`.xlsx`, via Apache POI) and PDF (via OpenPDF).
