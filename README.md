@@ -59,11 +59,19 @@ Starts the React app on `http://localhost:5173`.
 
 ### 4. Try it out
 
-Register a patient account, log in, search for a doctor, book an open time slot, pay for it, and
-check My Appointments / the notification bell. Note: no doctors exist until you insert some —
-either add rows to `users`/`doctors`/`doctor_sessions` directly in MySQL Workbench, or (once
-logged in as a `DOCTOR` or `OPERATIONS_MANAGER` user — set a user's `role` column manually for
-your first admin account) use the **Schedule** page to add sessions for a doctor.
+The first time the backend starts against an empty database, it automatically seeds three demo
+accounts (see `DataSeeder.java`) so you don't need to write any SQL by hand to try the app out:
+
+| Role | Email | Password |
+|---|---|---|
+| Patient | `patient@example.com` | `Patient@123` |
+| Doctor (Cardiology, with a few open sessions already scheduled) | `doctor@example.com` | `Doctor@123` |
+| Operations Manager | `admin@example.com` | `Admin@123` |
+
+The login page also has one-click buttons to fill these in. Log in as the patient, search for
+"Cardiology", book one of the seeded open slots, pay for it, and check My Appointments / the
+notification bell. Log in as the doctor or operations manager to try the Schedule and Reports
+pages. You can of course also register your own new patient account instead.
 
 ## Modules
 
