@@ -14,6 +14,7 @@ import MyAppointmentsPage from './pages/booking/MyAppointmentsPage';
 import PaymentPage from './pages/payments/PaymentPage';
 import ScheduleManagerPage from './pages/admin/ScheduleManagerPage';
 import ReportsPage from './pages/admin/ReportsPage';
+import ManageDoctorsPage from './pages/admin/ManageDoctorsPage';
 
 function App() {
   return (
@@ -30,6 +31,14 @@ function App() {
             <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
             <Route path="/appointments" element={<MyAppointmentsPage />} />
             <Route path="/pay/:appointmentId" element={<PaymentPage />} />
+            <Route
+              path="/admin/doctors"
+              element={
+                <RequireRole roles={['OPERATIONS_MANAGER', 'DOCTOR']}>
+                  <ManageDoctorsPage />
+                </RequireRole>
+              }
+            />
             <Route
               path="/admin/schedule"
               element={

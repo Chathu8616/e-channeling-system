@@ -48,6 +48,11 @@ export default function NavBar() {
             {user?.role === 'OPERATIONS_MANAGER' || user?.role === 'DOCTOR' ? (
               <>
                 <li className="nav-item px-2">
+                  <NavLink className="nav-link" to="/admin/doctors">
+                    Doctors
+                  </NavLink>
+                </li>
+                <li className="nav-item px-2">
                   <NavLink className="nav-link" to="/admin/schedule">
                     Schedule
                   </NavLink>
