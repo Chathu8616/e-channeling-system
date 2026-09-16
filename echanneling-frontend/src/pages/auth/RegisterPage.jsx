@@ -39,8 +39,9 @@ export default function RegisterPage() {
           />
         </div>
         <div className="col-lg-6">
-      <form className="form-narrow" onSubmit={handleSubmit}>
-        <h2 className="mb-4">Create an account</h2>
+      <form className="form-narrow card p-4 p-md-5" onSubmit={handleSubmit}>
+        <h2 className="mb-1">Create an account</h2>
+        <p className="text-muted mb-4">It only takes a minute.</p>
 
         <div className="mb-3">
           <label className="form-label">Full name</label>

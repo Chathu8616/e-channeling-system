@@ -49,8 +49,9 @@ export default function LoginPage() {
         </div>
 
         <div className="col-lg-6">
-          <form className="form-narrow" onSubmit={handleSubmit}>
-            <h2 className="mb-4">Login</h2>
+          <form className="form-narrow card p-4 p-md-5" onSubmit={handleSubmit}>
+            <h2 className="mb-1">Welcome back</h2>
+            <p className="text-muted mb-4">Log in to manage your appointments.</p>
 
             <div className="mb-3">
               <label className="form-label">Email</label>
