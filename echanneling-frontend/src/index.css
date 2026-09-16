@@ -160,6 +160,39 @@ a.card:hover,
   border-radius: 50rem;
 }
 
+/* Soft, tinted badge variants — the vendor theme's .badge defaults to white text
+   (meant to sit on a solid bg-* color), so text-bg-* combos render invisible.
+   These set an explicit background + text color pair instead. */
+.badge.badge-soft-brand {
+  background: rgba(40, 55, 121, 0.1);
+  color: var(--brand);
+}
+
+.badge.badge-soft-accent {
+  background: rgba(20, 184, 166, 0.14);
+  color: var(--accent-dark);
+}
+
+.badge.badge-soft-success {
+  background: rgba(48, 166, 74, 0.14);
+  color: #1f7a37;
+}
+
+.badge.badge-soft-warning {
+  background: rgba(254, 192, 47, 0.22);
+  color: #8a6100;
+}
+
+.badge.badge-soft-danger {
+  background: rgba(218, 56, 73, 0.12);
+  color: #b0212f;
+}
+
+.badge.badge-soft-muted {
+  background: #eef0f6;
+  color: var(--text-muted);
+}
+
 /* ---------------------------------------------------------------
    Navbar
    --------------------------------------------------------------- */

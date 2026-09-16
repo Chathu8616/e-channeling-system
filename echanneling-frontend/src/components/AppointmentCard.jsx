@@ -1,8 +1,8 @@
 const STATUS_STYLES = {
-  BOOKED: 'text-bg-success',
-  RESCHEDULED: 'text-bg-warning',
-  CANCELLED: 'text-bg-secondary',
-  COMPLETED: 'text-bg-primary',
+  BOOKED: 'badge-soft-success',
+  RESCHEDULED: 'badge-soft-warning',
+  CANCELLED: 'badge-soft-muted',
+  COMPLETED: 'badge-soft-brand',
 };
 
 export default function AppointmentCard({ appointment, onCancel }) {
@@ -12,7 +12,7 @@ export default function AppointmentCard({ appointment, onCancel }) {
         <div>
           <div className="d-flex align-items-center gap-2 mb-1">
             <h5 className="card-title mb-0">Dr. {appointment.doctorName}</h5>
-            <span className={`badge ${STATUS_STYLES[appointment.status] || 'text-bg-secondary'}`}>
+            <span className={`badge ${STATUS_STYLES[appointment.status] || 'badge-soft-muted'}`}>
               {appointment.status}
             </span>
           </div>

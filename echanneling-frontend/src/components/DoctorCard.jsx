@@ -30,7 +30,7 @@ export default function DoctorCard({ doctor }) {
             </div>
             <div>
               <h5 className="card-title mb-0">Dr. {doctor.fullName}</h5>
-              <span className="badge text-bg-light border">{doctor.specialty}</span>
+              <span className="badge badge-soft-brand">{doctor.specialty}</span>
             </div>
           </div>
 
