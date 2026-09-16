@@ -12,9 +12,10 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light py-3 border-bottom bg-white">
+    <nav className="site-navbar navbar navbar-expand-lg navbar-light py-2 sticky-top">
       <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
+        <Link className="navbar-brand" to="/">
+          <span className="brand-mark">EC</span>
           E-Channeling
         </Link>
 
@@ -61,18 +62,21 @@ export default function NavBar() {
             <NotificationBell />
 
             {user ? (
-              <li className="nav-item px-2">
+              <li className="nav-item px-2 d-flex align-items-center gap-2">
+                <span className="small text-muted d-none d-md-inline">
+                  {user.email.split('@')[0]}
+                </span>
                 <button
                   type="button"
                   className="btn btn-sm btn-outline-primary rounded-pill"
                   onClick={handleLogout}
                 >
-                  Logout ({user.email})
+                  Logout
                 </button>
               </li>
             ) : (
               <li className="nav-item px-2">
-                <Link className="btn btn-sm btn-outline-primary rounded-pill" to="/login">
+                <Link className="btn btn-sm btn-primary rounded-pill" to="/login">
                   Sign In
                 </Link>
               </li>
