@@ -37,6 +37,13 @@ public class ReportController {
         return excelResponse(reportService.exportAppointmentsExcel(from, to), "appointments-report.xlsx");
     }
 
+    @GetMapping("/appointments/export/pdf")
+    public ResponseEntity<byte[]> exportAppointmentsPdf(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return pdfResponse(reportService.exportAppointmentsPdf(from, to), "appointments-report.pdf");
+    }
+
     @GetMapping("/payments")
     public List<PaymentResponse> payments(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
@@ -51,6 +58,13 @@ public class ReportController {
         return excelResponse(reportService.exportPaymentsExcel(from, to), "payments-report.xlsx");
     }
 
+    @GetMapping("/payments/export/pdf")
+    public ResponseEntity<byte[]> exportPaymentsPdf(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return pdfResponse(reportService.exportPaymentsPdf(from, to), "payments-report.pdf");
+    }
+
     @GetMapping("/summary/daily")
     public DailySummaryResponse dailySummary(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -60,6 +74,13 @@ public class ReportController {
     private ResponseEntity<byte[]> excelResponse(byte[] content, String filename) {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .body(content);
+    }
+
+    private ResponseEntity<byte[]> pdfResponse(byte[] content, String filename) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .body(content);
     }
