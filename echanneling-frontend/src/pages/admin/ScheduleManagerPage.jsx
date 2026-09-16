@@ -1,9 +1,24 @@
-import { useState } from 'react';
-import { blockSession, createSession, getDoctorSessions, updateSession } from '../../services/doctorService';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  blockSession,
+  createSession,
+  getAllDoctorSessions,
+  searchDoctors,
+  updateSession,
+} from '../../services/doctorService';
 
-const emptyForm = { sessionDate: '', startTime: '', endTime: '' };
+const emptyForm = { sessionDate: new Date().toISOString().slice(0, 10), startTime: '', endTime: '' };
+
+const STATUS_BADGE = {
+  OPEN: 'badge-soft-success',
+  FULL: 'badge-soft-warning',
+  BLOCKED: 'badge-soft-muted',
+};
 
 export default function ScheduleManagerPage() {
+  const [doctors, setDoctors] = useState([]);
+  const [loadingDoctors, setLoadingDoctors] = useState(true);
   const [doctorId, setDoctorId] = useState('');
   const [form, setForm] = useState(emptyForm);
   const [editingSessionId, setEditingSessionId] = useState(null);
@@ -12,15 +27,27 @@ export default function ScheduleManagerPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const loadSessions = async () => {
-    if (!doctorId || !form.sessionDate) return;
+  useEffect(() => {
+    searchDoctors({})
+      .then((res) => setDoctors(res.data))
+      .catch(() => setError('Could not load the doctor list.'))
+      .finally(() => setLoadingDoctors(false));
+  }, []);
+
+  const loadSessions = async (id = doctorId, date = form.sessionDate) => {
+    if (!id || !date) return;
     try {
-      const res = await getDoctorSessions(doctorId, form.sessionDate);
+      const res = await getAllDoctorSessions(id, date);
       setSessions(res.data);
     } catch {
       setError('Could not load sessions.');
     }
   };
+
+  useEffect(() => {
+    loadSessions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doctorId, form.sessionDate]);
 
   const handleEditClick = (session) => {
     setEditingSessionId(session.sessionId);
@@ -35,13 +62,17 @@ export default function ScheduleManagerPage() {
 
   const cancelEdit = () => {
     setEditingSessionId(null);
-    setForm(emptyForm);
+    setForm({ ...emptyForm, sessionDate: form.sessionDate });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setMessage('');
+    if (!doctorId) {
+      setError('Choose a doctor first.');
+      return;
+    }
     try {
       if (editingSessionId) {
         await updateSession(editingSessionId, form);
@@ -70,21 +101,45 @@ export default function ScheduleManagerPage() {
     }
   };
 
+  const selectedDoctor = doctors.find((d) => String(d.doctorId) === String(doctorId));
+
   return (
     <div className="page-container">
       <h1 className="mb-1">Manage Doctor Schedule</h1>
       <p className="text-muted mb-4">Add, update, or block a doctor's available time slots.</p>
 
+      {!loadingDoctors && doctors.length === 0 && (
+        <div className="card p-4 mb-4 text-center">
+          <p className="text-muted mb-3">No doctors in the system yet.</p>
+          <Link to="/admin/doctors" className="btn btn-primary rounded-pill px-4 mx-auto" style={{ width: 'fit-content' }}>
+            Add a doctor
+          </Link>
+        </div>
+      )}
+
       <div className="card p-4 mb-4">
-        <div className="mb-3" style={{ maxWidth: 240 }}>
-          <label className="form-label">Doctor ID</label>
-          <input
-            type="number"
-            className="form-control"
+        <div className="mb-3" style={{ maxWidth: 320 }}>
+          <label className="form-label">Doctor</label>
+          <select
+            className="form-select"
             value={doctorId}
-            onChange={(e) => setDoctorId(e.target.value)}
-            disabled={!!editingSessionId}
-          />
+            onChange={(e) => {
+              setDoctorId(e.target.value);
+              cancelEdit();
+            }}
+          >
+            <option value="">{loadingDoctors ? 'Loading doctors...' : 'Select a doctor'}</option>
+            {doctors.map((d) => (
+              <option key={d.doctorId} value={d.doctorId}>
+                Dr. {d.fullName} — {d.specialty}
+              </option>
+            ))}
+          </select>
+          {selectedDoctor && (
+            <p className="text-muted small mt-1 mb-0">
+              {selectedDoctor.hospitalBranch} &middot; Rs. {selectedDoctor.consultationFee}
+            </p>
+          )}
         </div>
 
         {editingSessionId && (
@@ -125,7 +180,7 @@ export default function ScheduleManagerPage() {
             />
           </div>
           <div className="col-md-3 d-flex gap-2">
-            <button type="submit" className="btn btn-primary w-100 rounded-pill">
+            <button type="submit" className="btn btn-primary w-100 rounded-pill" disabled={!doctorId}>
               {editingSessionId ? 'Update session' : 'Add session'}
             </button>
           </div>
@@ -138,23 +193,24 @@ export default function ScheduleManagerPage() {
           )}
         </form>
 
-        <button
-          type="button"
-          className="btn btn-link btn-sm ps-0 mt-2"
-          style={{ width: 'fit-content' }}
-          onClick={loadSessions}
-        >
-          Refresh sessions for this date
-        </button>
-
-        {message && <p className="text-success mb-0">{message}</p>}
-        {error && <p className="text-danger mb-0">{error}</p>}
+        {message && <p className="text-success mb-0 mt-3">{message}</p>}
+        {error && <p className="text-danger mb-0 mt-3">{error}</p>}
       </div>
 
+      <h2 className="h6 text-uppercase text-muted mb-3" style={{ letterSpacing: '0.04em' }}>
+        Sessions on {form.sessionDate}
+      </h2>
+      {doctorId && sessions.length === 0 && <p className="text-muted">No sessions for this date.</p>}
+      {!doctorId && <p className="text-muted">Select a doctor to see their sessions.</p>}
       <ul className="list-group mb-4">
         {sessions.map((s) => (
           <li key={s.sessionId} className="list-group-item d-flex justify-content-between align-items-center">
-            {s.sessionDate} {s.startTime} - {s.endTime}
+            <span>
+              {s.sessionDate} {s.startTime} - {s.endTime}{' '}
+              <span className={`badge ${STATUS_BADGE[s.status] || 'badge-soft-muted'} ms-2`}>
+                {s.status}
+              </span>
+            </span>
             <div className="d-flex gap-2">
               <button
                 type="button"
@@ -163,13 +219,15 @@ export default function ScheduleManagerPage() {
               >
                 Edit
               </button>
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-danger rounded-pill"
-                onClick={() => handleBlockSession(s.sessionId)}
-              >
-                Block
-              </button>
+              {s.status === 'OPEN' && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-danger rounded-pill"
+                  onClick={() => handleBlockSession(s.sessionId)}
+                >
+                  Block
+                </button>
+              )}
             </div>
           </li>
         ))}
