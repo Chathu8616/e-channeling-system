@@ -1,8 +1,10 @@
 package lk.ac.sliit.echanneling_backend.service;
 
+import lk.ac.sliit.echanneling_backend.dto.CreateSessionRequest;
 import lk.ac.sliit.echanneling_backend.dto.DoctorResponse;
 import lk.ac.sliit.echanneling_backend.dto.SessionResponse;
 import lk.ac.sliit.echanneling_backend.model.Doctor;
+import lk.ac.sliit.echanneling_backend.model.DoctorSession;
 import lk.ac.sliit.echanneling_backend.model.SessionStatus;
 import lk.ac.sliit.echanneling_backend.repository.DoctorRepository;
 import lk.ac.sliit.echanneling_backend.repository.DoctorSessionRepository;
@@ -37,6 +39,24 @@ public class DoctorService {
                 .stream()
                 .map(SessionResponse::from)
                 .toList();
+    }
+
+    public SessionResponse createSession(Long doctorId, CreateSessionRequest req) {
+        Doctor doctor = findDoctor(doctorId);
+        DoctorSession session = new DoctorSession();
+        session.setDoctor(doctor);
+        session.setSessionDate(req.sessionDate());
+        session.setStartTime(req.startTime());
+        session.setEndTime(req.endTime());
+        session.setStatus(SessionStatus.OPEN);
+        return SessionResponse.from(doctorSessionRepository.save(session));
+    }
+
+    public void blockSession(Long sessionId) {
+        DoctorSession session = doctorSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalStateException("Session not found"));
+        session.setStatus(SessionStatus.BLOCKED);
+        doctorSessionRepository.save(session);
     }
 
     private Doctor findDoctor(Long doctorId) {
