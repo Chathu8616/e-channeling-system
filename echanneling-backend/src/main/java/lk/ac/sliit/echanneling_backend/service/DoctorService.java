@@ -2,8 +2,10 @@ package lk.ac.sliit.echanneling_backend.service;
 
 import lk.ac.sliit.echanneling_backend.dto.CreateDoctorRequest;
 import lk.ac.sliit.echanneling_backend.dto.CreateSessionRequest;
+import lk.ac.sliit.echanneling_backend.dto.DoctorProfileResponse;
 import lk.ac.sliit.echanneling_backend.dto.DoctorResponse;
 import lk.ac.sliit.echanneling_backend.dto.SessionResponse;
+import lk.ac.sliit.echanneling_backend.dto.UpdateDoctorProfileRequest;
 import lk.ac.sliit.echanneling_backend.model.Doctor;
 import lk.ac.sliit.echanneling_backend.model.DoctorSession;
 import lk.ac.sliit.echanneling_backend.model.Role;
@@ -61,6 +63,24 @@ public class DoctorService {
         return DoctorResponse.from(doctorRepository.save(doctor));
     }
 
+    public DoctorProfileResponse getMyProfile(Long userId) {
+        return DoctorProfileResponse.from(findDoctorByUserId(userId));
+    }
+
+    public DoctorProfileResponse updateMyProfile(Long userId, UpdateDoctorProfileRequest req) {
+        Doctor doctor = findDoctorByUserId(userId);
+
+        User user = doctor.getUser();
+        user.setFullName(req.fullName());
+        user.setPhone(req.phone());
+        userRepository.save(user);
+
+        doctor.setSpecialty(req.specialty());
+        doctor.setHospitalBranch(req.hospitalBranch());
+        doctor.setConsultationFee(req.consultationFee());
+        return DoctorProfileResponse.from(doctorRepository.save(doctor));
+    }
+
     public List<SessionResponse> getOpenSessions(Long doctorId, LocalDate date) {
         Doctor doctor = findDoctor(doctorId);
         return doctorSessionRepository
@@ -110,6 +130,11 @@ public class DoctorService {
     private Doctor findDoctor(Long doctorId) {
         return doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new IllegalStateException("Doctor not found"));
+    }
+
+    private Doctor findDoctorByUserId(Long userId) {
+        return doctorRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Doctor profile not found"));
     }
 
     private String blankToNull(String value) {
