@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   exportAppointmentsExcel,
+  exportAppointmentsPdf,
   exportPaymentsExcel,
+  exportPaymentsPdf,
   getAppointmentsReport,
   getDailySummary,
   getPaymentsReport,
@@ -11,12 +13,28 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
+const STATUS_OPTIONS = ['ALL', 'BOOKED', 'CANCELLED', 'RESCHEDULED', 'COMPLETED'];
+
+const STATUS_BADGE = {
+  BOOKED: 'badge-soft-success',
+  RESCHEDULED: 'badge-soft-warning',
+  CANCELLED: 'badge-soft-muted',
+  COMPLETED: 'badge-soft-brand',
+};
+
+const PAYMENT_STATUS_BADGE = {
+  SUCCESS: 'badge-soft-success',
+  PENDING: 'badge-soft-warning',
+  FAILED: 'badge-soft-danger',
+};
+
 export default function ReportsPage() {
   const [from, setFrom] = useState(todayIso());
   const [to, setTo] = useState(todayIso());
   const [appointments, setAppointments] = useState([]);
   const [payments, setPayments] = useState([]);
   const [summary, setSummary] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('ALL');
   const [error, setError] = useState('');
 
   const loadReports = async () => {
@@ -34,6 +52,14 @@ export default function ReportsPage() {
       setError('Could not load reports. Are you signed in as an admin or doctor?');
     }
   };
+
+  const filteredAppointments = useMemo(
+    () =>
+      statusFilter === 'ALL'
+        ? appointments
+        : appointments.filter((a) => a.status === statusFilter),
+    [appointments, statusFilter]
+  );
 
   return (
     <div className="page-container">
@@ -89,15 +115,36 @@ export default function ReportsPage() {
       )}
 
       <div className="card p-4 mb-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="h5 mb-0">Appointments ({appointments.length})</h2>
-        <button
-          type="button"
-          className="btn btn-sm btn-outline-primary rounded-pill"
-          onClick={() => exportAppointmentsExcel(from, to)}
-        >
-          Export to Excel
-        </button>
+      <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h2 className="h5 mb-0">Appointments ({filteredAppointments.length})</h2>
+        <div className="d-flex align-items-center gap-2">
+          <select
+            className="form-select form-select-sm"
+            style={{ width: 'auto' }}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            {STATUS_OPTIONS.map((s) => (
+              <option key={s} value={s}>
+                {s === 'ALL' ? 'All statuses' : s}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-primary rounded-pill"
+            onClick={() => exportAppointmentsExcel(from, to)}
+          >
+            Export Excel
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-primary rounded-pill"
+            onClick={() => exportAppointmentsPdf(from, to)}
+          >
+            Export PDF
+          </button>
+        </div>
       </div>
       <div className="table-responsive">
         <table className="table table-sm">
@@ -111,13 +158,17 @@ export default function ReportsPage() {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((a) => (
+            {filteredAppointments.map((a) => (
               <tr key={a.appointmentId}>
                 <td>{a.referenceNo}</td>
                 <td>{a.doctorName}</td>
                 <td>{a.appointmentDate}</td>
                 <td>{a.timeSlot}</td>
-                <td>{a.status}</td>
+                <td>
+                  <span className={`badge ${STATUS_BADGE[a.status] || 'badge-soft-muted'}`}>
+                    {a.status}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -126,15 +177,24 @@ export default function ReportsPage() {
       </div>
 
       <div className="card p-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
         <h2 className="h5 mb-0">Payments ({payments.length})</h2>
-        <button
-          type="button"
-          className="btn btn-sm btn-outline-primary rounded-pill"
-          onClick={() => exportPaymentsExcel(from, to)}
-        >
-          Export to Excel
-        </button>
+        <div className="d-flex align-items-center gap-2">
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-primary rounded-pill"
+            onClick={() => exportPaymentsExcel(from, to)}
+          >
+            Export Excel
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-primary rounded-pill"
+            onClick={() => exportPaymentsPdf(from, to)}
+          >
+            Export PDF
+          </button>
+        </div>
       </div>
       <div className="table-responsive">
         <table className="table table-sm">
@@ -151,7 +211,11 @@ export default function ReportsPage() {
               <tr key={p.paymentId}>
                 <td>{p.appointmentReferenceNo}</td>
                 <td>Rs. {p.amount}</td>
-                <td>{p.status}</td>
+                <td>
+                  <span className={`badge ${PAYMENT_STATUS_BADGE[p.status] || 'badge-soft-muted'}`}>
+                    {p.status}
+                  </span>
+                </td>
                 <td>{p.paidAt || '-'}</td>
               </tr>
             ))}
