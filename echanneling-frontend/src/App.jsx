@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -18,19 +19,22 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <NavBar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/doctors" element={<DoctorSearchPage />} />
-          <Route path="/doctors/:id" element={<DoctorProfilePage />} />
-          <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
-          <Route path="/appointments" element={<MyAppointmentsPage />} />
-          <Route path="/pay/:appointmentId" element={<PaymentPage />} />
-          <Route path="/admin/schedule" element={<ScheduleManagerPage />} />
-          <Route path="/admin/reports" element={<ReportsPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <main className="page-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/doctors" element={<DoctorSearchPage />} />
+            <Route path="/doctors/:id" element={<DoctorProfilePage />} />
+            <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
+            <Route path="/appointments" element={<MyAppointmentsPage />} />
+            <Route path="/pay/:appointmentId" element={<PaymentPage />} />
+            <Route path="/admin/schedule" element={<ScheduleManagerPage />} />
+            <Route path="/admin/reports" element={<ReportsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
+        <Footer />
       </AuthProvider>
     </BrowserRouter>
   );
