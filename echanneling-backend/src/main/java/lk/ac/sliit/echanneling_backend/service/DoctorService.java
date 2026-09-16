@@ -70,6 +70,16 @@ public class DoctorService {
                 .toList();
     }
 
+    /** Unlike getOpenSessions (patient-facing), this returns every session regardless of
+     * status so admins/doctors can see and manage blocked or fully-booked slots too. */
+    public List<SessionResponse> getAllSessions(Long doctorId, LocalDate date) {
+        Doctor doctor = findDoctor(doctorId);
+        return doctorSessionRepository.findByDoctor_DoctorIdAndSessionDate(doctor.getDoctorId(), date)
+                .stream()
+                .map(SessionResponse::from)
+                .toList();
+    }
+
     public SessionResponse createSession(Long doctorId, CreateSessionRequest req) {
         Doctor doctor = findDoctor(doctorId);
         DoctorSession session = new DoctorSession();

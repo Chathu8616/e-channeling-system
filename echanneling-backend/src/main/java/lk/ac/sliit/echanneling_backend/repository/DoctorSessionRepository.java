@@ -11,5 +11,7 @@ public interface DoctorSessionRepository extends JpaRepository<DoctorSession, Lo
     List<DoctorSession> findByDoctor_DoctorIdAndSessionDateAndStatus(
             Long doctorId, LocalDate sessionDate, SessionStatus status);
 
+    List<DoctorSession> findByDoctor_DoctorIdAndSessionDate(Long doctorId, LocalDate sessionDate);
+
     List<DoctorSession> findByDoctor_DoctorId(Long doctorId);
 }
