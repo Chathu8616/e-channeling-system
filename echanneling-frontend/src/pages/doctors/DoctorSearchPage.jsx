@@ -42,55 +42,56 @@ export default function DoctorSearchPage() {
 
   return (
     <div className="page-container">
-      <div className="row align-items-center g-4 mb-4">
-        <div className="col-lg-7">
+      <div className="row g-4 mb-4 align-items-stretch">
+        <div className="col-lg-7 d-flex flex-column">
           <h1 className="mb-1">Find a Doctor</h1>
-          <p className="text-muted mb-0">Search by specialty, hospital branch, or doctor name.</p>
+          <p className="text-muted mb-4">Search by specialty, hospital branch, or doctor name.</p>
+
+          <form className="card p-3 g-2 row mt-auto" onSubmit={handleSubmit}>
+            <div className="col-md-3">
+              <input
+                name="specialty"
+                className="form-control"
+                placeholder="Specialty"
+                value={filters.specialty}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                name="branch"
+                className="form-control"
+                placeholder="Hospital branch"
+                value={filters.branch}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <input
+                name="name"
+                className="form-control"
+                placeholder="Doctor name"
+                value={filters.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="col-md-3">
+              <button type="submit" className="btn btn-primary w-100 rounded-pill text-nowrap">
+                Search
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="col-lg-5 text-center text-lg-end">
+
+        <div className="col-lg-5 d-none d-lg-block">
           <img
-            src="/theme/img/gallery/treatment.png"
-            alt="Stethoscope"
-            className="img-fluid rounded-4 shadow-sm"
-            style={{ maxHeight: 160, objectFit: 'cover' }}
+            src="/theme/img/gallery/eye-care.png"
+            alt="A doctor at a clinic"
+            className="rounded-4 shadow-md w-100 h-100"
+            style={{ objectFit: 'cover' }}
           />
         </div>
       </div>
-
-      <form className="card p-3 g-2 row mb-4" onSubmit={handleSubmit}>
-        <div className="col-md-3">
-          <input
-            name="specialty"
-            className="form-control"
-            placeholder="Specialty"
-            value={filters.specialty}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-3">
-          <input
-            name="branch"
-            className="form-control"
-            placeholder="Hospital branch"
-            value={filters.branch}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-3">
-          <input
-            name="name"
-            className="form-control"
-            placeholder="Doctor name"
-            value={filters.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="col-md-3">
-          <button type="submit" className="btn btn-primary w-100 rounded-pill text-nowrap">
-            Search
-          </button>
-        </div>
-      </form>
 
       {loading && <Spinner label="Searching doctors..." />}
       {error && <p className="text-danger">{error}</p>}
