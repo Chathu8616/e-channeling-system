@@ -1,0 +1,94 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { register } from '../../services/authService';
+
+const emptyForm = { fullName: '', nic: '', email: '', phone: '', password: '' };
+
+export default function RegisterPage() {
+  const [form, setForm] = useState(emptyForm);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
+    try {
+      await register(form);
+      navigate('/login');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="page-container">
+      <form className="form-narrow" onSubmit={handleSubmit}>
+        <h2 className="mb-4">Create an account</h2>
+
+        <div className="mb-3">
+          <label className="form-label">Full name</label>
+          <input
+            name="fullName"
+            className="form-control"
+            value={form.fullName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">NIC</label>
+          <input name="nic" className="form-control" value={form.nic} onChange={handleChange} required />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Email</label>
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Phone</label>
+          <input name="phone" className="form-control" value={form.phone} onChange={handleChange} />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            value={form.password}
+            onChange={handleChange}
+            minLength={8}
+            required
+          />
+        </div>
+
+        {error && <p className="text-danger">{error}</p>}
+
+        <button type="submit" className="btn btn-primary w-100" disabled={submitting}>
+          {submitting ? 'Creating account...' : 'Register'}
+        </button>
+
+        <p className="mt-3 text-center">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </form>
+    </div>
+  );
+}
