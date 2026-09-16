@@ -9,6 +9,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DoctorSearchPage from './pages/doctors/DoctorSearchPage';
 import DoctorProfilePage from './pages/doctors/DoctorProfilePage';
+import MyProfilePage from './pages/doctors/MyProfilePage';
 import BookAppointmentPage from './pages/booking/BookAppointmentPage';
 import MyAppointmentsPage from './pages/booking/MyAppointmentsPage';
 import PaymentPage from './pages/payments/PaymentPage';
@@ -31,6 +32,14 @@ function App() {
             <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
             <Route path="/appointments" element={<MyAppointmentsPage />} />
             <Route path="/pay/:appointmentId" element={<PaymentPage />} />
+            <Route
+              path="/my-profile"
+              element={
+                <RequireRole roles={['DOCTOR']}>
+                  <MyProfilePage />
+                </RequireRole>
+              }
+            />
             <Route
               path="/admin/doctors"
               element={

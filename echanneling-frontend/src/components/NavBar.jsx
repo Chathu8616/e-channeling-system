@@ -45,6 +45,13 @@ export default function NavBar() {
                 </NavLink>
               </li>
             )}
+            {user?.role === 'DOCTOR' && (
+              <li className="nav-item px-2">
+                <NavLink className="nav-link" to="/my-profile">
+                  My Profile
+                </NavLink>
+              </li>
+            )}
             {user?.role === 'OPERATIONS_MANAGER' || user?.role === 'DOCTOR' ? (
               <>
                 <li className="nav-item px-2">
