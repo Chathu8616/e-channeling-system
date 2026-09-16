@@ -1,6 +1,7 @@
 package lk.ac.sliit.echanneling_backend.controller;
 
 import jakarta.validation.Valid;
+import lk.ac.sliit.echanneling_backend.dto.CreateDoctorRequest;
 import lk.ac.sliit.echanneling_backend.dto.CreateSessionRequest;
 import lk.ac.sliit.echanneling_backend.dto.DoctorResponse;
 import lk.ac.sliit.echanneling_backend.dto.SessionResponse;
@@ -31,6 +32,12 @@ public class DoctorController {
     @GetMapping("/{id}")
     public DoctorResponse getById(@PathVariable Long id) {
         return doctorService.getById(id);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('OPERATIONS_MANAGER')")
+    public DoctorResponse createDoctor(@Valid @RequestBody CreateDoctorRequest req) {
+        return doctorService.createDoctor(req);
     }
 
     @GetMapping("/{id}/sessions")
