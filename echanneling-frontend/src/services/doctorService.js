@@ -10,4 +10,7 @@ export const getDoctorSessions = (id, date) =>
 export const createSession = (doctorId, session) =>
   api.post(`/doctors/${doctorId}/sessions`, session);
 
+export const updateSession = (sessionId, session) =>
+  api.put(`/doctors/sessions/${sessionId}`, session);
+
 export const blockSession = (sessionId) => api.delete(`/doctors/sessions/${sessionId}`);
