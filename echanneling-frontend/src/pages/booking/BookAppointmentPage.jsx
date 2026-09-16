@@ -24,31 +24,43 @@ export default function BookAppointmentPage() {
   if (result) {
     return (
       <div className="page-container text-center">
-        <h1>Appointment confirmed</h1>
-        <p>Reference number: <strong>{result.referenceNo}</strong></p>
-        <p>
-          {result.appointmentDate} at {result.timeSlot} with Dr. {result.doctorName}
-        </p>
-        <Link to={`/pay/${result.appointmentId}`} className="btn btn-primary rounded-pill px-4">
-          Pay now
-        </Link>
+        <div className="form-narrow card p-4">
+          <div
+            className="icon-circle mx-auto"
+            style={{ background: 'rgba(20,184,166,0.15)', color: 'var(--accent-dark)', fontSize: '1.5rem' }}
+          >
+            ✓
+          </div>
+          <h1 className="h3 mb-2">Appointment confirmed</h1>
+          <p className="text-muted mb-1">
+            Reference number: <strong className="text-body">{result.referenceNo}</strong>
+          </p>
+          <p className="mb-4">
+            {result.appointmentDate} at {result.timeSlot} with Dr. {result.doctorName}
+          </p>
+          <Link to={`/pay/${result.appointmentId}`} className="btn btn-primary rounded-pill px-4">
+            Pay now
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="page-container text-center">
-      <h1>Confirm your appointment</h1>
-      <p className="text-muted">Press confirm to book this time slot.</p>
-      {error && <p className="text-danger">{error}</p>}
-      <button
-        type="button"
-        className="btn btn-primary rounded-pill px-4"
-        onClick={handleConfirm}
-        disabled={submitting}
-      >
-        {submitting ? 'Booking...' : 'Confirm booking'}
-      </button>
+      <div className="form-narrow card p-4">
+        <h1 className="h3 mb-2">Confirm your appointment</h1>
+        <p className="text-muted mb-4">Press confirm to reserve this time slot.</p>
+        {error && <p className="text-danger">{error}</p>}
+        <button
+          type="button"
+          className="btn btn-primary rounded-pill px-4"
+          onClick={handleConfirm}
+          disabled={submitting}
+        >
+          {submitting ? 'Booking...' : 'Confirm booking'}
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import AppointmentCard from '../../components/AppointmentCard';
+import Spinner from '../../components/Spinner';
 import { cancelAppointment, getMyAppointments } from '../../services/appointmentService';
 
 export default function MyAppointmentsPage() {
@@ -30,9 +32,16 @@ export default function MyAppointmentsPage() {
   return (
     <div className="page-container">
       <h1 className="mb-4">My Appointments</h1>
-      {loading && <p>Loading...</p>}
+      {loading && <Spinner label="Loading your appointments..." />}
       {error && <p className="text-danger">{error}</p>}
-      {!loading && appointments.length === 0 && <p>You have no appointments yet.</p>}
+      {!loading && appointments.length === 0 && (
+        <div className="card text-center p-5">
+          <p className="text-muted mb-3">You have no appointments yet.</p>
+          <Link to="/doctors" className="btn btn-primary rounded-pill mx-auto" style={{ width: 'fit-content' }}>
+            Find a Doctor
+          </Link>
+        </div>
+      )}
       {appointments.map((appointment) => (
         <AppointmentCard
           key={appointment.appointmentId}
