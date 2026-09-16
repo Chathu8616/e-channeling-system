@@ -49,8 +49,8 @@ export default function DoctorSearchPage() {
         </div>
         <div className="col-lg-5 text-center text-lg-end">
           <img
-            src="/theme/img/gallery/about-us.png"
-            alt="Doctor ready to help you"
+            src="/theme/img/gallery/treatment.png"
+            alt="Stethoscope"
             className="img-fluid rounded-4 shadow-sm"
             style={{ maxHeight: 160, objectFit: 'cover' }}
           />

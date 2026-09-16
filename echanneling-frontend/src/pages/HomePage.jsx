@@ -117,8 +117,8 @@ export default function HomePage() {
           </div>
           <div className="col-lg-6 order-lg-1 text-center">
             <img
-              src="/theme/img/gallery/doctors-us.png"
-              alt="Our doctors"
+              src="/theme/img/gallery/laboratories.png"
+              alt="A doctor at work"
               className="img-fluid rounded-4 shadow-md"
             />
           </div>
