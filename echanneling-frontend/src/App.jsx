@@ -7,6 +7,8 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DoctorSearchPage from './pages/doctors/DoctorSearchPage';
 import DoctorProfilePage from './pages/doctors/DoctorProfilePage';
+import BookAppointmentPage from './pages/booking/BookAppointmentPage';
+import MyAppointmentsPage from './pages/booking/MyAppointmentsPage';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/doctors" element={<DoctorSearchPage />} />
           <Route path="/doctors/:id" element={<DoctorProfilePage />} />
+          <Route path="/book/:sessionId" element={<BookAppointmentPage />} />
+          <Route path="/appointments" element={<MyAppointmentsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
