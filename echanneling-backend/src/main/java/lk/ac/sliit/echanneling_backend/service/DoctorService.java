@@ -1,14 +1,19 @@
 package lk.ac.sliit.echanneling_backend.service;
 
+import lk.ac.sliit.echanneling_backend.dto.CreateDoctorRequest;
 import lk.ac.sliit.echanneling_backend.dto.CreateSessionRequest;
 import lk.ac.sliit.echanneling_backend.dto.DoctorResponse;
 import lk.ac.sliit.echanneling_backend.dto.SessionResponse;
 import lk.ac.sliit.echanneling_backend.model.Doctor;
 import lk.ac.sliit.echanneling_backend.model.DoctorSession;
+import lk.ac.sliit.echanneling_backend.model.Role;
 import lk.ac.sliit.echanneling_backend.model.SessionStatus;
+import lk.ac.sliit.echanneling_backend.model.User;
 import lk.ac.sliit.echanneling_backend.repository.DoctorRepository;
 import lk.ac.sliit.echanneling_backend.repository.DoctorSessionRepository;
+import lk.ac.sliit.echanneling_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +25,8 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final DoctorSessionRepository doctorSessionRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<DoctorResponse> search(String specialty, String branch, String name) {
         return doctorRepository.search(blankToNull(specialty), blankToNull(branch), blankToNull(name))
@@ -30,6 +37,28 @@ public class DoctorService {
 
     public DoctorResponse getById(Long doctorId) {
         return DoctorResponse.from(findDoctor(doctorId));
+    }
+
+    public DoctorResponse createDoctor(CreateDoctorRequest req) {
+        if (userRepository.existsByEmail(req.email())) {
+            throw new IllegalStateException("Email already registered");
+        }
+        User user = new User();
+        user.setFullName(req.fullName());
+        user.setNic(req.nic());
+        user.setEmail(req.email());
+        user.setPhone(req.phone());
+        user.setPasswordHash(passwordEncoder.encode(req.password()));
+        user.setRole(Role.DOCTOR);
+        user.setVerified(true);
+        userRepository.save(user);
+
+        Doctor doctor = new Doctor();
+        doctor.setUser(user);
+        doctor.setSpecialty(req.specialty());
+        doctor.setHospitalBranch(req.hospitalBranch());
+        doctor.setConsultationFee(req.consultationFee());
+        return DoctorResponse.from(doctorRepository.save(doctor));
     }
 
     public List<SessionResponse> getOpenSessions(Long doctorId, LocalDate date) {
