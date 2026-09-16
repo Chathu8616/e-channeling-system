@@ -9,12 +9,22 @@ import lk.ac.sliit.echanneling_backend.model.Payment;
 import lk.ac.sliit.echanneling_backend.model.PaymentStatus;
 import lk.ac.sliit.echanneling_backend.repository.AppointmentRepository;
 import lk.ac.sliit.echanneling_backend.repository.PaymentRepository;
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -112,6 +122,85 @@ public class ReportService {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             workbook.write(out);
             return out.toByteArray();
+        }
+    }
+
+    public byte[] exportAppointmentsPdf(LocalDate from, LocalDate to) {
+        List<AppointmentResponse> rows = getAppointmentsReport(from, to);
+        String[] columns = {"Reference No", "Doctor", "Specialty", "Date", "Time", "Status"};
+        List<String[]> data = rows.stream()
+                .map(a -> new String[]{
+                        a.referenceNo(), a.doctorName(), a.specialty(),
+                        a.appointmentDate().toString(), a.timeSlot().toString(), a.status().name()
+                })
+                .toList();
+        return buildPdf("Appointments Report", from, to, columns, data);
+    }
+
+    public byte[] exportPaymentsPdf(LocalDate from, LocalDate to) {
+        List<PaymentResponse> rows = getPaymentsReport(from, to);
+        String[] columns = {"Appointment Ref", "Amount", "Status", "Paid At"};
+        List<String[]> data = rows.stream()
+                .map(p -> new String[]{
+                        p.appointmentReferenceNo(), "Rs. " + p.amount(), p.status().name(),
+                        p.paidAt() != null ? p.paidAt().toString() : "-"
+                })
+                .toList();
+        return buildPdf("Payments Report", from, to, columns, data);
+    }
+
+    private byte[] buildPdf(String title, LocalDate from, LocalDate to, String[] columns, List<String[]> rows) {
+        Document document = new Document(PageSize.A4);
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+            Font subFont = FontFactory.getFont(FontFactory.HELVETICA, 11, Color.GRAY);
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.WHITE);
+            Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 10);
+
+            Paragraph heading = new Paragraph(title, titleFont);
+            heading.setSpacingAfter(4);
+            document.add(heading);
+
+            Paragraph range = new Paragraph("E-Channeling System — " + from + " to " + to, subFont);
+            range.setSpacingAfter(16);
+            document.add(range);
+
+            PdfPTable table = new PdfPTable(columns.length);
+            table.setWidthPercentage(100);
+
+            for (String column : columns) {
+                PdfPCell cell = new PdfPCell(new Paragraph(column, headerFont));
+                cell.setBackgroundColor(new Color(40, 55, 121));
+                cell.setPadding(6);
+                cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                table.addCell(cell);
+            }
+
+            for (String[] row : rows) {
+                for (String value : row) {
+                    PdfPCell cell = new PdfPCell(new Paragraph(value, cellFont));
+                    cell.setPadding(5);
+                    table.addCell(cell);
+                }
+            }
+
+            if (rows.isEmpty()) {
+                PdfPCell empty = new PdfPCell(new Paragraph("No records for this date range.", cellFont));
+                empty.setColspan(columns.length);
+                empty.setPadding(8);
+                table.addCell(empty);
+            }
+
+            document.add(table);
+            document.close();
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (com.lowagie.text.DocumentException e) {
+            throw new RuntimeException("Failed to generate PDF report", e);
         }
     }
 }
