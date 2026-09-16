@@ -20,13 +20,20 @@ function initials(name) {
 export default function DoctorProfilePage() {
   const { id } = useParams();
   const [doctor, setDoctor] = useState(null);
+  const [doctorError, setDoctorError] = useState('');
   const [date, setDate] = useState(todayIso());
   const [sessions, setSessions] = useState([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    getDoctor(id).then((res) => setDoctor(res.data));
+    setDoctorError('');
+    setDoctor(null);
+    getDoctor(id)
+      .then((res) => setDoctor(res.data))
+      .catch((err) =>
+        setDoctorError(err.response?.data?.message || 'Could not load this doctor.')
+      );
   }, [id]);
 
   useEffect(() => {
@@ -37,6 +44,18 @@ export default function DoctorProfilePage() {
       .catch(() => setError('Could not load availability.'))
       .finally(() => setLoadingSessions(false));
   }, [id, date]);
+
+  if (doctorError) {
+    return (
+      <div className="page-container text-center py-5">
+        <h1 className="mb-3">Doctor not found</h1>
+        <p className="text-danger mb-4">{doctorError}</p>
+        <Link to="/doctors" className="btn btn-primary rounded-pill px-4">
+          Back to doctor search
+        </Link>
+      </div>
+    );
+  }
 
   if (!doctor) return <div className="page-container"><Spinner label="Loading doctor profile..." /></div>;
 
