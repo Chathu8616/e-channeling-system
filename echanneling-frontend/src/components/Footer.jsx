@@ -11,7 +11,7 @@ export default function Footer() {
               E-Channeling
             </span>
             <p className="small mb-0" style={{ maxWidth: 280 }}>
-              Book verified doctors across Sri Lanka in minutes — search, schedule, and pay
+              Book doctors' appointments online in minutes — search, schedule, and pay
               online, no phone calls needed.
             </p>
           </div>

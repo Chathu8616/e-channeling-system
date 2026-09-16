@@ -77,7 +77,7 @@ export default function LoginPage() {
 
             {error && <p className="text-danger">{error}</p>}
 
-            <button type="submit" className="btn btn-primary w-100" disabled={submitting}>
+            <button type="submit" className="btn btn-primary w-100 rounded-pill" disabled={submitting}>
               {submitting ? 'Logging in...' : 'Login'}
             </button>
 
@@ -92,15 +92,15 @@ export default function LoginPage() {
                   <button
                     key={account.email}
                     type="button"
-                    className="btn btn-sm btn-outline-secondary me-2 mb-2"
+                    className="btn btn-sm btn-outline-secondary rounded-pill me-2 mb-2"
                     onClick={() => fillDemoAccount(account)}
                   >
                     {account.label}
                   </button>
                 ))}
                 <p className="small text-muted mb-0">
-                  {DEMO_ACCOUNTS[0].email} / {DEMO_ACCOUNTS[0].password} (seeded automatically the
-                  first time the backend starts)
+                  {DEMO_ACCOUNTS[0].email} / {DEMO_ACCOUNTS[0].password} (created automatically
+                  when the backend starts)
                 </p>
               </div>
             </div>

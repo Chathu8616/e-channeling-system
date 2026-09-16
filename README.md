@@ -59,8 +59,9 @@ Starts the React app on `http://localhost:5173`.
 
 ### 4. Try it out
 
-The first time the backend starts against an empty database, it automatically seeds three demo
-accounts (see `DataSeeder.java`) so you don't need to write any SQL by hand to try the app out:
+On every backend startup, `DataSeeder.java` makes sure three demo accounts exist (creating
+whichever ones are still missing, without touching any other data), so you don't need to write any
+SQL by hand to try the app out:
 
 | Role | Email | Password |
 |---|---|---|
