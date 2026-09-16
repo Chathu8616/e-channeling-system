@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   exportAppointmentsExcel,
   exportAppointmentsPdf,
@@ -52,6 +52,11 @@ export default function ReportsPage() {
       setError('Could not load reports. Are you signed in as an admin or doctor?');
     }
   };
+
+  useEffect(() => {
+    loadReports();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredAppointments = useMemo(
     () =>
