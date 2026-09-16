@@ -111,7 +111,7 @@ export default function ScheduleManagerPage() {
       {!loadingDoctors && doctors.length === 0 && (
         <div className="card p-4 mb-4 text-center">
           <p className="text-muted mb-3">No doctors in the system yet.</p>
-          <Link to="/admin/doctors" className="btn btn-primary rounded-pill px-4 mx-auto" style={{ width: 'fit-content' }}>
+          <Link to="/doctor-directory" className="btn btn-primary rounded-pill px-4 mx-auto" style={{ width: 'fit-content' }}>
             Add a doctor
           </Link>
         </div>

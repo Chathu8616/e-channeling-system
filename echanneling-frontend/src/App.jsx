@@ -15,7 +15,7 @@ import MyAppointmentsPage from './pages/booking/MyAppointmentsPage';
 import PaymentPage from './pages/payments/PaymentPage';
 import ScheduleManagerPage from './pages/admin/ScheduleManagerPage';
 import ReportsPage from './pages/admin/ReportsPage';
-import ManageDoctorsPage from './pages/admin/ManageDoctorsPage';
+import DoctorDirectoryPage from './pages/doctors/DoctorDirectoryPage';
 
 function App() {
   return (
@@ -41,10 +41,10 @@ function App() {
               }
             />
             <Route
-              path="/admin/doctors"
+              path="/doctor-directory"
               element={
-                <RequireRole roles={['OPERATIONS_MANAGER', 'DOCTOR']}>
-                  <ManageDoctorsPage />
+                <RequireRole roles={['OPERATIONS_MANAGER', 'DOCTOR', 'PATIENT']}>
+                  <DoctorDirectoryPage />
                 </RequireRole>
               }
             />

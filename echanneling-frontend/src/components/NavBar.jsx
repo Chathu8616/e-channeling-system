@@ -2,6 +2,12 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
 
+const DOCTORS_LINK_LABEL = {
+  OPERATIONS_MANAGER: 'Manage Doctors',
+  DOCTOR: 'Doctors',
+  PATIENT: 'Our Doctors',
+};
+
 export default function NavBar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -52,13 +58,15 @@ export default function NavBar() {
                 </NavLink>
               </li>
             )}
+            {user && (
+              <li className="nav-item px-2">
+                <NavLink className="nav-link" to="/doctor-directory">
+                  {DOCTORS_LINK_LABEL[user.role] || 'Our Doctors'}
+                </NavLink>
+              </li>
+            )}
             {user?.role === 'OPERATIONS_MANAGER' || user?.role === 'DOCTOR' ? (
               <>
-                <li className="nav-item px-2">
-                  <NavLink className="nav-link" to="/admin/doctors">
-                    Doctors
-                  </NavLink>
-                </li>
                 <li className="nav-item px-2">
                   <NavLink className="nav-link" to="/admin/schedule">
                     Schedule
