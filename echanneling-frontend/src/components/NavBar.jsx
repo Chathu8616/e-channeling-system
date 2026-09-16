@@ -45,11 +45,18 @@ export default function NavBar() {
               </li>
             )}
             {user?.role === 'OPERATIONS_MANAGER' || user?.role === 'DOCTOR' ? (
-              <li className="nav-item px-2">
-                <NavLink className="nav-link" to="/admin/reports">
-                  Reports
-                </NavLink>
-              </li>
+              <>
+                <li className="nav-item px-2">
+                  <NavLink className="nav-link" to="/admin/schedule">
+                    Schedule
+                  </NavLink>
+                </li>
+                <li className="nav-item px-2">
+                  <NavLink className="nav-link" to="/admin/reports">
+                    Reports
+                  </NavLink>
+                </li>
+              </>
             ) : null}
             <NotificationBell />
 
