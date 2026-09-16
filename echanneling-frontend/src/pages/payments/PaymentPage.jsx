@@ -38,26 +38,40 @@ export default function PaymentPage() {
   if (payment?.status === 'SUCCESS') {
     return (
       <div className="page-container text-center">
-        <h1>Payment successful</h1>
-        <div className="card form-narrow mx-auto mt-4">
-          <div className="card-body">
-            <h2 className="h5">Receipt</h2>
-            <p className="mb-1">Appointment: {payment.appointmentReferenceNo}</p>
-            <p className="mb-1">Amount: Rs. {payment.amount}</p>
-            <p className="mb-0">Paid at: {payment.paidAt}</p>
+        <div className="form-narrow card p-4">
+          <div
+            className="icon-circle mx-auto"
+            style={{ background: 'rgba(20,184,166,0.15)', color: 'var(--accent-dark)', fontSize: '1.5rem' }}
+          >
+            ✓
           </div>
+          <h1 className="h3 mb-3">Payment successful</h1>
+          <div className="text-start bg-light rounded-3 p-3 mb-4">
+            <h2 className="h6 text-uppercase text-muted mb-2" style={{ letterSpacing: '0.04em' }}>
+              Receipt
+            </h2>
+            <p className="mb-1 d-flex justify-content-between">
+              <span className="text-muted">Appointment</span> <strong>{payment.appointmentReferenceNo}</strong>
+            </p>
+            <p className="mb-1 d-flex justify-content-between">
+              <span className="text-muted">Amount</span> <strong>Rs. {payment.amount}</strong>
+            </p>
+            <p className="mb-0 d-flex justify-content-between">
+              <span className="text-muted">Paid at</span> <strong>{payment.paidAt}</strong>
+            </p>
+          </div>
+          <Link to="/appointments" className="btn btn-primary rounded-pill px-4">
+            Go to My Appointments
+          </Link>
         </div>
-        <Link to="/appointments" className="btn btn-primary rounded-pill px-4 mt-4">
-          Go to My Appointments
-        </Link>
       </div>
     );
   }
 
   return (
     <div className="page-container">
-      <div className="form-narrow">
-        <h1 className="mb-4">Pay for your appointment</h1>
+      <div className="form-narrow card p-4">
+        <h1 className="h3 mb-4">Pay for your appointment</h1>
 
         <div className="mb-3">
           <label className="form-label">Payment method</label>
