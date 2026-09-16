@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import DoctorCard from '../../components/DoctorCard';
 import { searchDoctors } from '../../services/doctorService';
 
 export default function DoctorSearchPage() {
-  const [filters, setFilters] = useState({ specialty: '', branch: '', name: '' });
+  const [searchParams] = useSearchParams();
+  const [filters, setFilters] = useState({
+    specialty: searchParams.get('specialty') || '',
+    branch: '',
+    name: '',
+  });
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -22,7 +28,8 @@ export default function DoctorSearchPage() {
   };
 
   useEffect(() => {
-    runSearch({});
+    runSearch(filters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => setFilters({ ...filters, [e.target.name]: e.target.value });
