@@ -8,7 +8,7 @@ export const getPaymentsReport = (from, to) =>
 
 export const getDailySummary = (date) => api.get('/reports/summary/daily', { params: { date } });
 
-async function downloadExcel(path, from, to, filename) {
+async function downloadFile(path, from, to, filename) {
   const res = await api.get(path, { params: { from, to }, responseType: 'blob' });
   const url = window.URL.createObjectURL(new Blob([res.data]));
   const link = document.createElement('a');
@@ -21,7 +21,13 @@ async function downloadExcel(path, from, to, filename) {
 }
 
 export const exportAppointmentsExcel = (from, to) =>
-  downloadExcel('/reports/appointments/export', from, to, 'appointments-report.xlsx');
+  downloadFile('/reports/appointments/export', from, to, 'appointments-report.xlsx');
 
 export const exportPaymentsExcel = (from, to) =>
-  downloadExcel('/reports/payments/export', from, to, 'payments-report.xlsx');
+  downloadFile('/reports/payments/export', from, to, 'payments-report.xlsx');
+
+export const exportAppointmentsPdf = (from, to) =>
+  downloadFile('/reports/appointments/export/pdf', from, to, 'appointments-report.pdf');
+
+export const exportPaymentsPdf = (from, to) =>
+  downloadFile('/reports/payments/export/pdf', from, to, 'payments-report.pdf');
