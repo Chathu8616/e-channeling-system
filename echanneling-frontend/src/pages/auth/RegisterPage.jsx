@@ -30,6 +30,15 @@ export default function RegisterPage() {
 
   return (
     <div className="page-container">
+      <div className="row align-items-center g-5">
+        <div className="col-lg-6 d-none d-lg-block">
+          <img
+            src="/theme/img/gallery/appointment.png"
+            alt="Booking an appointment"
+            className="img-fluid rounded-4 shadow-sm"
+          />
+        </div>
+        <div className="col-lg-6">
       <form className="form-narrow" onSubmit={handleSubmit}>
         <h2 className="mb-4">Create an account</h2>
 
@@ -89,6 +98,8 @@ export default function RegisterPage() {
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>
+        </div>
+      </div>
     </div>
   );
 }
