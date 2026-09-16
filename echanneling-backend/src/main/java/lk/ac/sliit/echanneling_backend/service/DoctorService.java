@@ -59,6 +59,15 @@ public class DoctorService {
         doctorSessionRepository.save(session);
     }
 
+    public SessionResponse updateSession(Long sessionId, CreateSessionRequest req) {
+        DoctorSession session = doctorSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalStateException("Session not found"));
+        session.setSessionDate(req.sessionDate());
+        session.setStartTime(req.startTime());
+        session.setEndTime(req.endTime());
+        return SessionResponse.from(doctorSessionRepository.save(session));
+    }
+
     private Doctor findDoctor(Long doctorId) {
         return doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new IllegalStateException("Doctor not found"));

@@ -46,6 +46,12 @@ public class DoctorController {
         return doctorService.createSession(id, req);
     }
 
+    @PutMapping("/sessions/{sessionId}")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'OPERATIONS_MANAGER')")
+    public SessionResponse updateSession(@PathVariable Long sessionId, @Valid @RequestBody CreateSessionRequest req) {
+        return doctorService.updateSession(sessionId, req);
+    }
+
     @DeleteMapping("/sessions/{sessionId}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'OPERATIONS_MANAGER')")
     public void blockSession(@PathVariable Long sessionId) {
