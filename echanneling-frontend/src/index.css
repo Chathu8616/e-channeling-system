@@ -1,20 +1,312 @@
+/* ---------------------------------------------------------------
+   Design tokens
+   --------------------------------------------------------------- */
+:root {
+  --brand: #283779;
+  --brand-dark: #1b2557;
+  --accent: #14b8a6;
+  --accent-dark: #0f9488;
+  --bg: #f6f8fc;
+  --surface: #ffffff;
+  --border: #e7eaf3;
+  --text: #1c2233;
+  --text-muted: #667085;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 8px 24px rgba(24, 32, 64, 0.08);
+  --shadow-lg: 0 24px 48px rgba(24, 32, 64, 0.14);
+  --font-heading: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ---------------------------------------------------------------
+   Base
+   --------------------------------------------------------------- */
 body {
   margin: 0;
-  background: #f5f7fb;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--brand);
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root > main,
+#root > .page-content {
+  flex: 1;
 }
 
 .page-container {
-  max-width: 1100px;
+  max-width: 1140px;
   margin: 0 auto;
-  padding: 32px 16px 64px;
+  padding: 48px 20px 72px;
 }
 
 .brand-link {
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
 }
 
 .form-narrow {
-  max-width: 420px;
+  max-width: 440px;
   margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------
+   Buttons
+   --------------------------------------------------------------- */
+.btn {
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding-inline: 1.15em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.btn.rounded-pill {
+  border-radius: 50rem;
+}
+
+.btn-primary {
+  box-shadow: 0 6px 16px rgba(40, 55, 121, 0.28);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(40, 55, 121, 0.32);
+}
+
+.btn-outline-primary {
+  border-width: 1.5px;
+}
+
+/* ---------------------------------------------------------------
+   Surfaces: cards, forms, tables
+   --------------------------------------------------------------- */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+a.card:hover,
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.form-control,
+.form-select {
+  border-radius: var(--radius-sm);
+  border-color: var(--border);
+  padding: 0.65rem 0.9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.2rem rgba(40, 55, 121, 0.12);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.form-narrow.card,
+.form-narrow > .card {
+  padding: 8px;
+}
+
+.table {
+  --bs-table-bg: transparent;
+}
+
+.table thead th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom-width: 1px;
+}
+
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.45em 0.75em;
+  border-radius: 50rem;
+}
+
+/* ---------------------------------------------------------------
+   Navbar
+   --------------------------------------------------------------- */
+.site-navbar {
+  background: var(--surface);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.site-navbar .navbar-brand {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--brand);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.site-navbar .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.site-navbar .nav-link {
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.5rem 0.85rem !important;
+  border-radius: var(--radius-sm);
+}
+
+.site-navbar .nav-link:hover,
+.site-navbar .nav-link.active {
+  color: var(--brand);
+  background: rgba(40, 55, 121, 0.06);
+}
+
+/* ---------------------------------------------------------------
+   Hero
+   --------------------------------------------------------------- */
+.hero-band {
+  background: radial-gradient(1200px 480px at 15% -10%, rgba(20, 184, 166, 0.14), transparent),
+    linear-gradient(180deg, #eef1fb 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  background: rgba(20, 184, 166, 0.12);
+  padding: 6px 14px;
+  border-radius: 50rem;
+  margin-bottom: 18px;
+}
+
+.stat-tile {
+  text-align: center;
+}
+
+.stat-tile .stat-number {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--brand);
+}
+
+.stat-tile .stat-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.section-alt {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.icon-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(40, 55, 121, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.cta-band {
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: var(--radius-lg);
+  color: #fff;
+  padding: 48px;
+}
+
+.cta-band h2 {
+  color: #fff !important;
+}
+
+/* ---------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------- */
+.site-footer {
+  background: #10152b;
+  color: #b7bdd6;
+  margin-top: auto;
+}
+
+.site-footer a {
+  color: #d7dbee;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #fff;
+}
+
+.site-footer h6 {
+  color: #fff !important;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---------------------------------------------------------------
+   Misc
+   --------------------------------------------------------------- */
+.spinner-brand {
+  color: var(--brand);
+}
+
+@media (max-width: 576px) {
+  .page-container {
+    padding: 32px 16px 56px;
+  }
+  .cta-band {
+    padding: 32px 20px;
+  }
 }
