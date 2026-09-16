@@ -42,8 +42,20 @@ export default function DoctorSearchPage() {
 
   return (
     <div className="page-container">
-      <h1 className="mb-1">Find a Doctor</h1>
-      <p className="text-muted mb-4">Search by specialty, hospital branch, or doctor name.</p>
+      <div className="row align-items-center g-4 mb-4">
+        <div className="col-lg-7">
+          <h1 className="mb-1">Find a Doctor</h1>
+          <p className="text-muted mb-0">Search by specialty, hospital branch, or doctor name.</p>
+        </div>
+        <div className="col-lg-5 text-center text-lg-end">
+          <img
+            src="/theme/img/gallery/about-us.png"
+            alt="Doctor ready to help you"
+            className="img-fluid rounded-4 shadow-sm"
+            style={{ maxHeight: 160, objectFit: 'cover' }}
+          />
+        </div>
+      </div>
 
       <form className="card p-3 g-2 row mb-4" onSubmit={handleSubmit}>
         <div className="col-md-3">
