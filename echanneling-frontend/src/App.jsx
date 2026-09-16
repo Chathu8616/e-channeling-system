@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import DoctorSearchPage from './pages/doctors/DoctorSearchPage';
+import DoctorProfilePage from './pages/doctors/DoctorProfilePage';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/doctors" element={<DoctorSearchPage />} />
+          <Route path="/doctors/:id" element={<DoctorProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
