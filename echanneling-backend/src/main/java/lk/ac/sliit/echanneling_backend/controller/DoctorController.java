@@ -3,8 +3,11 @@ package lk.ac.sliit.echanneling_backend.controller;
 import jakarta.validation.Valid;
 import lk.ac.sliit.echanneling_backend.dto.CreateDoctorRequest;
 import lk.ac.sliit.echanneling_backend.dto.CreateSessionRequest;
+import lk.ac.sliit.echanneling_backend.dto.DoctorProfileResponse;
 import lk.ac.sliit.echanneling_backend.dto.DoctorResponse;
 import lk.ac.sliit.echanneling_backend.dto.SessionResponse;
+import lk.ac.sliit.echanneling_backend.dto.UpdateDoctorProfileRequest;
+import lk.ac.sliit.echanneling_backend.security.CurrentUserProvider;
 import lk.ac.sliit.echanneling_backend.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +23,7 @@ import java.util.List;
 public class DoctorController {
 
     private final DoctorService doctorService;
+    private final CurrentUserProvider currentUserProvider;
 
     @GetMapping
     public List<DoctorResponse> search(
@@ -32,6 +36,18 @@ public class DoctorController {
     @GetMapping("/{id}")
     public DoctorResponse getById(@PathVariable Long id) {
         return doctorService.getById(id);
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public DoctorProfileResponse getMyProfile() {
+        return doctorService.getMyProfile(currentUserProvider.getCurrentUser().getUserId());
+    }
+
+    @PutMapping("/me")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public DoctorProfileResponse updateMyProfile(@Valid @RequestBody UpdateDoctorProfileRequest req) {
+        return doctorService.updateMyProfile(currentUserProvider.getCurrentUser().getUserId(), req);
     }
 
     @PostMapping
