@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from './NotificationBell';
 
 export default function NavBar() {
   const { user, logout } = useAuth();
@@ -50,6 +51,7 @@ export default function NavBar() {
                 </NavLink>
               </li>
             ) : null}
+            <NotificationBell />
 
             {user ? (
               <li className="nav-item px-2">
