@@ -9,11 +9,11 @@ const SPECIALTIES = [
   { name: 'Orthopedics', icon: '/theme/img/icons/osteoporosis.svg' },
 ];
 
-const STATS = [
-  { number: '250+', label: 'Verified doctors' },
-  { number: '18', label: 'Specialties' },
-  { number: '12k+', label: 'Appointments booked' },
-  { number: '4.8/5', label: 'Average patient rating' },
+const HIGHLIGHTS = [
+  { icon: '🔎', label: 'Real-time availability' },
+  { icon: '🔒', label: 'Secure online payments' },
+  { icon: '⚡', label: 'Instant confirmation' },
+  { icon: '🕒', label: 'Book anytime, online' },
 ];
 
 const STEPS = [
@@ -43,14 +43,14 @@ export default function HomePage() {
                 Book a doctor's appointment online, in minutes
               </h1>
               <p className="text-muted mb-4 fs-5">
-                Search verified doctors, pick an open time slot, and pay securely — all in one
+                Search available doctors, pick an open time slot, and pay securely — all in one
                 place, without a single phone call.
               </p>
               <div className="d-flex flex-wrap gap-3">
-                <Link to="/doctors" className="btn btn-primary btn-lg rounded-pill px-4">
+                <Link to="/doctors" className="btn btn-primary rounded-pill px-4">
                   Find a Doctor
                 </Link>
-                <Link to="/register" className="btn btn-outline-primary btn-lg rounded-pill px-4">
+                <Link to="/register" className="btn btn-outline-primary rounded-pill px-4">
                   Create free account
                 </Link>
               </div>
@@ -65,10 +65,10 @@ export default function HomePage() {
           </div>
 
           <div className="row mt-5 pt-4 gy-4">
-            {STATS.map((s) => (
-              <div className="col-6 col-md-3 stat-tile" key={s.label}>
-                <div className="stat-number">{s.number}</div>
-                <div className="stat-label">{s.label}</div>
+            {HIGHLIGHTS.map((h) => (
+              <div className="col-6 col-md-3 stat-tile" key={h.label}>
+                <div className="stat-number" style={{ fontSize: '1.6rem' }}>{h.icon}</div>
+                <div className="stat-label">{h.label}</div>
               </div>
             ))}
           </div>
@@ -129,9 +129,9 @@ export default function HomePage() {
         <div className="cta-band text-center">
           <h2 className="h3 mb-3">Ready to see a doctor?</h2>
           <p className="mb-4" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            Join thousands of patients booking their appointments online today.
+            Create a free account and book your first appointment in minutes.
           </p>
-          <Link to="/register" className="btn btn-light btn-lg rounded-pill px-4 fw-semibold">
+          <Link to="/register" className="btn btn-light rounded-pill px-4 fw-semibold">
             Get Started
           </Link>
         </div>
