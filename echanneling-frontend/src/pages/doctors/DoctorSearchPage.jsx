@@ -47,38 +47,40 @@ export default function DoctorSearchPage() {
           <h1 className="mb-1">Find a Doctor</h1>
           <p className="text-muted mb-4">Search by specialty, hospital branch, or doctor name.</p>
 
-          <form className="card p-3 g-2 row mt-auto" onSubmit={handleSubmit}>
-            <div className="col-md-3">
-              <input
-                name="specialty"
-                className="form-control"
-                placeholder="Specialty"
-                value={filters.specialty}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-3">
-              <input
-                name="branch"
-                className="form-control"
-                placeholder="Hospital branch"
-                value={filters.branch}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-3">
-              <input
-                name="name"
-                className="form-control"
-                placeholder="Doctor name"
-                value={filters.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-3">
-              <button type="submit" className="btn btn-primary w-100 rounded-pill text-nowrap">
-                Search
-              </button>
+          <form className="card p-3 mt-auto" onSubmit={handleSubmit}>
+            <div className="row g-2">
+              <div className="col-md-3">
+                <input
+                  name="specialty"
+                  className="form-control"
+                  placeholder="Specialty"
+                  value={filters.specialty}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-3">
+                <input
+                  name="branch"
+                  className="form-control"
+                  placeholder="Hospital branch"
+                  value={filters.branch}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-3">
+                <input
+                  name="name"
+                  className="form-control"
+                  placeholder="Doctor name"
+                  value={filters.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-md-3">
+                <button type="submit" className="btn btn-primary w-100 rounded-pill text-nowrap">
+                  Search
+                </button>
+              </div>
             </div>
           </form>
         </div>
