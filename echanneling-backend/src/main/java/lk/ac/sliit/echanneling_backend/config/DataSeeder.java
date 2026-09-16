@@ -14,8 +14,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * Seeds a few demo accounts (and one doctor with open sessions) the first time the app runs
- * against an empty database, so the system can be tried out immediately without manual SQL.
+ * Ensures a few demo accounts (and one doctor with open sessions) exist, so the system can be
+ * tried out immediately without manual SQL. Each account is created only if its email doesn't
+ * already exist yet, so this is safe to run on every startup — it won't touch or duplicate any
+ * real data you've already added, and it will still create the demo accounts even if you'd
+ * registered other users before this seeder existed.
  * Demo login: patient@example.com / Patient@123 (see README for the full list).
  */
 @Component
@@ -29,36 +32,40 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() > 0) {
-            return;
+        createUserIfMissing("Demo Patient", "199912345678", "patient@example.com", "Patient@123", Role.PATIENT);
+        createUserIfMissing("Operations Manager", "198512345671", "admin@example.com", "Admin@123", Role.OPERATIONS_MANAGER);
+
+        User doctorUser = createUserIfMissing(
+                "Dr. Anjali Perera", "197812345672", "doctor@example.com", "Doctor@123", Role.DOCTOR);
+
+        Doctor doctor = doctorRepository.findByUser_UserId(doctorUser.getUserId())
+                .orElseGet(() -> {
+                    Doctor d = new Doctor();
+                    d.setUser(doctorUser);
+                    d.setSpecialty("Cardiology");
+                    d.setHospitalBranch("Colombo General Hospital");
+                    d.setConsultationFee(new BigDecimal("2500.00"));
+                    return doctorRepository.save(d);
+                });
+
+        if (doctorSessionRepository.findByDoctor_DoctorId(doctor.getDoctorId()).isEmpty()) {
+            seedSession(doctor, LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(9, 30));
+            seedSession(doctor, LocalDate.now(), LocalTime.of(9, 30), LocalTime.of(10, 0));
+            seedSession(doctor, LocalDate.now().plusDays(1), LocalTime.of(14, 0), LocalTime.of(14, 30));
         }
-
-        createUser("Demo Patient", "199912345678", "patient@example.com", "Patient@123", Role.PATIENT);
-        createUser("Operations Manager", "198512345671", "admin@example.com", "Admin@123", Role.OPERATIONS_MANAGER);
-
-        User doctorUser = createUser("Dr. Anjali Perera", "197812345672", "doctor@example.com", "Doctor@123", Role.DOCTOR);
-
-        Doctor doctor = new Doctor();
-        doctor.setUser(doctorUser);
-        doctor.setSpecialty("Cardiology");
-        doctor.setHospitalBranch("Colombo General Hospital");
-        doctor.setConsultationFee(new BigDecimal("2500.00"));
-        doctorRepository.save(doctor);
-
-        seedSession(doctor, LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(9, 30));
-        seedSession(doctor, LocalDate.now(), LocalTime.of(9, 30), LocalTime.of(10, 0));
-        seedSession(doctor, LocalDate.now().plusDays(1), LocalTime.of(14, 0), LocalTime.of(14, 30));
     }
 
-    private User createUser(String fullName, String nic, String email, String rawPassword, Role role) {
-        User user = new User();
-        user.setFullName(fullName);
-        user.setNic(nic);
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(rawPassword));
-        user.setRole(role);
-        user.setVerified(true);
-        return userRepository.save(user);
+    private User createUserIfMissing(String fullName, String nic, String email, String rawPassword, Role role) {
+        return userRepository.findByEmail(email).orElseGet(() -> {
+            User user = new User();
+            user.setFullName(fullName);
+            user.setNic(nic);
+            user.setEmail(email);
+            user.setPasswordHash(passwordEncoder.encode(rawPassword));
+            user.setRole(role);
+            user.setVerified(true);
+            return userRepository.save(user);
+        });
     }
 
     private void seedSession(Doctor doctor, LocalDate date, LocalTime start, LocalTime end) {
